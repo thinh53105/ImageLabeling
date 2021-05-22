@@ -9,8 +9,9 @@ Use git clone to install app
 git clone https://github.com/thinh53105/ImageLabeling.git
 ```
 
-##Requirements
+## Requirements
 Install some libraries to run this app
+
 ```bash
 pip install -r requirements.txt
 ```
