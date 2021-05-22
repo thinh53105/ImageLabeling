@@ -1,6 +1,0 @@
-image001.jpg,dog
-image002.jpg,cat
-image003.jpg,noise
-image001.jpg,dog
-image002.jpg,cat
-image003.jpg,noise
