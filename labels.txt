@@ -1,1 +1,15 @@
-image,label
+image001.jpg,1
+image002.jpg,0
+image003.jpg,-1
+image001.jpg,DOG
+image002.jpg,CAT
+image003.jpg,NOISE
+image001.jpg,dog
+image002.jpg,cat
+image003.jpg,noise
+image001.jpg,dog
+image002.jpg,cat
+image003.jpg,noise
+image001.jpg,dog
+image002.jpg,cat
+image003.jpg,noise
