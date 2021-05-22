@@ -5,21 +5,22 @@ from functools import partial
 from shutil import copyfile
 import os
 
-WRITE_TXT_FILE = 0
-SPLIT_IN_DIR = 1
-DO_BOTH = 2
+WRITE_TXT_FILE = 0  # Save method, write your labels to "labels.txt" file
+SPLIT_IN_DIR = 1    # Save method, create data directory to store your labels
+DO_BOTH = 2         # Save method, do both WRITE_TXT_FILE and SPLIT_IN_DIR
 
-WRITE_NUMBER = 0
-WRITE_NAME = 1
+WRITE_NUMBER = 0    # Write method, write in format: images_name,labels_in_number
+WRITE_NAME = 1      # Write method, write in format: images_name,labels_in_name
 
 # Dynamic variables
-source_path = "images"
-destination_path = "done"
-list_of_labels = ["DOG", "CAT", "NOISE"]
-list_of_label_numbers = [1, 0, -1]
-save_mt = DO_BOTH
-mov_to_done = False
-write_mt = WRITE_NAME
+source_path = "images"  # Where you push your images into
+destination_path = "done"   # Where you done images go
+list_of_label_names = ["DOG", "CAT", "NOISE"]   # Label names
+list_of_label_numbers = [1, 0, -1]  # Label numbers
+save_mt = DO_BOTH       # Save method
+mov_to_done = False     # Move to done directory or not
+write_mt = WRITE_NAME   # Write method
+clear_txt_file = False  # Clear your "labels.txt" before running
 
 
 image_list = os.listdir(source_path)
@@ -27,7 +28,7 @@ image_list = os.listdir(source_path)
 
 class App(Frame):
     def __init__(self, master=None, src_path=None, img_list=None, des_path=None, labels_list=None, nums_list=None,
-                 save_method=2, write_method=0, move_to_done=None):
+                 save_method=2, write_method=0, move_to_done=None, clear_f=False):
         Frame.__init__(self, master)
         self.master = master
         self.src_path = src_path
@@ -46,6 +47,10 @@ class App(Frame):
 
         self.write_method = write_method
         self.move_to_done = move_to_done
+        self.clear_f = clear_f
+        if self.clear_f:
+            with open("labels.txt", "w"):
+                pass
 
         self.pack(fill=BOTH, expand=1)
 
@@ -68,10 +73,11 @@ class App(Frame):
             action_with_arg = partial(self.btn_label_action, i)
             btn = self.add_button(f"{self.nums_list[i]} ({self.labels_list[i]})", ("Times", "16", "bold"),
                                   (self.space_bw_btn + self.btn_length)*i + self.lb_space_x + self.marx, self.lb_space_y,
-                                  "white", "black", command=action_with_arg)
+                                  "#87CEEB", "black", command=action_with_arg)
             self.btn_labels_list.append(btn)
 
-        self.btn_next = self.add_button("NEXT", ("Times", "16", "bold"), 850, 250, "yellow", "red", command=self.btn_next_action)
+        self.btn_next = self.add_button("NEXT", ("Times", "16", "bold"), 850, 350, "yellow", "red", command=self.btn_next_action)
+        self.btn_finish = self.add_button("FINISH", ("Times", "16", "bold"), 850, 100, "#708090", "#800000", command=self.btn_finish_action)
 
     def load_img(self, path, x, y):
         img = ImageTk.PhotoImage(Image.open(path).resize((720, 480)))
@@ -93,7 +99,7 @@ class App(Frame):
     def reset(self):
         self.choice, self.choice_name = None, None
         for btn in self.btn_labels_list:
-            btn["bg"] = "white"
+            btn["bg"] = "#87CEEB"
             btn["fg"] = "black"
 
     def btn_label_action(self, index):
@@ -130,9 +136,13 @@ class App(Frame):
                 self.master.destroy()
             self.reset()
 
+    def btn_finish_action(self):
+        self.master.destroy()
+
 
 root = Tk()
-app = App(root, source_path, image_list, destination_path, list_of_labels, list_of_label_numbers, save_mt, write_mt, mov_to_done)
+app = App(root, source_path, image_list, destination_path, list_of_label_names, list_of_label_numbers,
+          save_mt, write_mt, mov_to_done, clear_txt_file)
 root.wm_title("Image Labeling")
 root.geometry("1080x720")
 root.resizable(0, 0)
